@@ -16,33 +16,33 @@ export default (Editor, fred) => {
             //const preview = this.buildPreview();
 
             wrapper.appendChild(this.buildIconInput());
-            wrapper.appendChild(this.buildSelectInput({
+            wrapper.appendChild(this.ui.buildSelectInput({
                 label: 'Size',
                 name: 'size',
                 options: FAIconEditor.sizes
-            }));
+            }, this.state.size, this.setStateValue));
 
-            wrapper.appendChild(this.buildToggleInput({
+            wrapper.appendChild(this.ui.buildToggleInput({
                 label: 'Fixed Width',
                 name: 'fixedWidth'
-            }));
+            }, this.state.fixedWidth, this.setStateValue));
 
-            wrapper.appendChild(this.buildToggleInput({
+            wrapper.appendChild(this.ui.buildToggleInput({
                 label: 'Border',
                 name: 'border'
-            }));
+            }, this.state.border, this.setStateValue));
 
-            wrapper.appendChild(this.buildSelectInput({
+            wrapper.appendChild(this.ui.buildSelectInput({
                 label: 'Pull',
                 name: 'pull',
                 options: FAIconEditor.pull
-            }));
+            }, this.state.pull, this.setStateValue));
 
-            wrapper.appendChild(this.buildSelectInput({
+            wrapper.appendChild(this.ui.buildSelectInput({
                 label: 'Animation',
                 name: 'animation',
                 options: FAIconEditor.animation
-            }));
+            }, this.state.animation, this.setStateValue));
 
             wrapper.appendChild(this.buildAttributesFields());
             wrapper.appendChild(this.buildPreview());
