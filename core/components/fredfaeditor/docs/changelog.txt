@@ -1,0 +1,5 @@
+Changelog for Fred FA Editor.
+
+Fred FA Editor 0.0.1
+==============
+- Initial release.
