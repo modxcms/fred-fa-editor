@@ -103,7 +103,7 @@ export default (Editor, fred) => {
 
             iconChoices.passedElement.addEventListener('choice', event => {
                 this.setStateValue('icon', event.detail.choice.value);
-                iconChoices.setChoices(FAIconEditor.icons, 'title', 'title');
+                iconChoices.setChoices(FAIconEditor.icons, 'title', 'title', true);
             });
 
             iconChoices.passedElement.addEventListener('search', event => {
