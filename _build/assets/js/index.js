@@ -11,34 +11,34 @@ export default (Editor, fred) => {
         }
 
         render() {
-            const wrapper = document.createElement('div');
+            const wrapper = this.ui.els.div();
 
             //const preview = this.buildPreview();
 
             wrapper.appendChild(this.buildIconInput());
-            wrapper.appendChild(this.ui.buildSelectInput({
+            wrapper.appendChild(this.ui.ins.select({
                 label: 'Size',
                 name: 'size',
                 options: FAIconEditor.sizes
             }, this.state.size, this.setStateValue));
 
-            wrapper.appendChild(this.ui.buildToggleInput({
+            wrapper.appendChild(this.ui.ins.toggle({
                 label: 'Fixed Width',
                 name: 'fixedWidth'
             }, this.state.fixedWidth, this.setStateValue));
 
-            wrapper.appendChild(this.ui.buildToggleInput({
+            wrapper.appendChild(this.ui.ins.toggle({
                 label: 'Border',
                 name: 'border'
             }, this.state.border, this.setStateValue));
 
-            wrapper.appendChild(this.ui.buildSelectInput({
+            wrapper.appendChild(this.ui.ins.select({
                 label: 'Pull',
                 name: 'pull',
                 options: FAIconEditor.pull
             }, this.state.pull, this.setStateValue));
 
-            wrapper.appendChild(this.ui.buildSelectInput({
+            wrapper.appendChild(this.ui.ins.select({
                 label: 'Animation',
                 name: 'animation',
                 options: FAIconEditor.animation
@@ -57,13 +57,11 @@ export default (Editor, fred) => {
         }
 
         buildPreview() {
-            const wrapper = document.createElement('div');
-            wrapper.classList.add('fred--preview');
+            const wrapper = this.ui.els.div(['fred--preview']);
 
-            const label = document.createElement('label');
-            label.innerText = 'Preview';
+            const label = this.ui.els.label('Preview');
 
-            this.preview = document.createElement('i');
+            this.preview = this.ui.els.i();
             this.preview.className = this.buildClass();
 
             wrapper.appendChild(label);
@@ -73,13 +71,11 @@ export default (Editor, fred) => {
         }
 
         buildIconInput() {
-            const wrapper = document.createElement('div');
+            const wrapper = this.ui.els.div();
 
             const input = document.createElement('select');
 
-            const label = document.createElement('label');
-            label.classList.add('fred--label-choices');
-            label.innerText = 'Icon';
+            const label = this.ui.els.label('Icon', ['fred--label-choices']);
 
             wrapper.appendChild(label);
             wrapper.appendChild(input);
