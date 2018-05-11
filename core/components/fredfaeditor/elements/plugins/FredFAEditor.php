@@ -17,6 +17,7 @@ $beforeRender = '
 
 $modx->event->_output = [
     'includes' => $includes, 
-    'beforeRender' => $beforeRender
+    'beforeRender' => $beforeRender,
+    'lexicons' => ['fredfaeditor:default']
 ];
 return true;
