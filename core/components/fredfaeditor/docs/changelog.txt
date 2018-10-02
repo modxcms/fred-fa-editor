@@ -1,5 +1,9 @@
 Changelog for Fred FA Editor.
 
-Fred FA Editor 0.0.1
+Fred FA Editor 1.0.0-beta2
+==============
+- Add resolver to adjust IconEditor in system settings
+
+Fred FA Editor 1.0.0-beta
 ==============
 - Initial release.
