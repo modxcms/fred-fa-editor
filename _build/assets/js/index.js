@@ -8,7 +8,7 @@ export default (Editor, fred) => {
             this.sizes = {'': this.fredConfig.lng('fredfaeditor.default'), 'fa-xs': 'XS', 'fa-sm': 'SM', 'fa-lg': 'LG', 'fa-2x': '2x', 'fa-3x': '3x', 'fa-4x': '4x', 'fa-5x': '5x', 'fa-6x': '6x', 'fa-7x': '7x', 'fa-8x': '8x', 'fa-9x': '9x', 'fa-10x': '10x'};
             this.pull = {'': this.fredConfig.lng('fredfaeditor.none'), 'fa-pull-left': this.fredConfig.lng('fredfaeditor.left'), 'fa-pull-right': this.fredConfig.lng('fredfaeditor.right')};
 
-            this.state = this.parseClass(this.el.className || '');
+            this.state = this.parseClass((this.el.fredEl.constructor.getElValue(this.el) || ''));
         }
 
         render() {
@@ -54,7 +54,7 @@ export default (Editor, fred) => {
         onSave() {
             Editor.prototype.onSave.call(this);
 
-            this.el.className = this.buildClass();
+            this.el.fredEl.setElValue(this.el, this.buildClass());
         }
 
         buildPreview() {
