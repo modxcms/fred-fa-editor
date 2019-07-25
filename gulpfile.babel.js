@@ -21,6 +21,7 @@ import yaml from "gulp-yaml";
 const $ = gulpLoadPlugins();
 const libFolder = './_build/assets/lib';
 const tmpFolder = './_build/assets/tmp/';
+const prodFolder = './_build/assets/js/';
 const tmpIcons = 'icons.temp.yml';
 const sources = './_build/assets/js/**/*.js';
 
@@ -103,9 +104,12 @@ gulp.task('fa:format', function() {
             }
         });
     });
-    return newFile('icons.temp.formatted.json', JSON.stringify(targetJSON.icons))
-    .pipe(gulp.dest(tmpFolder));
+    return newFile('icons.json', JSON.stringify(targetJSON.icons))
+    .pipe(gulp.dest(prodFolder));
 });
+
+// Build FA
+gulp.task('fa', gulp.series('fa:download','fa:yaml','fa:format'));
 
 // Clean folder
 gulp.task('clean', () =>
@@ -129,7 +133,7 @@ gulp.task('webpack:build-web', done => {
 });
 
 // Build for web
-gulp.task('build-web', gulp.series('webpack:build-web'/*, 'css'*/));
+gulp.task('build-web', gulp.series('fa','webpack:build-web'/*, 'css'*/));
 
 
 // Webpack watch helper
