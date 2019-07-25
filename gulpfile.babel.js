@@ -13,74 +13,16 @@ import pkg from './package.json';
 import webpackConfig from "./webpack.config.js";
 import merge from "merge-stream";
 import concat from "gulp-concat";
-
-import sass from 'gulp-ruby-sass';
+import request from "request";
+import util from "gulp-util";
+import source from "vinyl-source-stream";
+import yaml from "gulp-yaml";
 
 const $ = gulpLoadPlugins();
 const libFolder = './_build/assets/lib';
+const tmpFolder = './_build/assets/tmp/';
+const tmpIcons = 'icons.temp.yml';
 const sources = './_build/assets/js/**/*.js';
-
-gulp.task('default', ['build-web']);
-
-// Build for web
-gulp.task('build-web', ['webpack:build-web'/*, 'css'*/]);
-
-// Build for web + watch
-gulp.task('build-web-dev', ['webpack:build-web-dev'/*, 'css'*/], () => {
-    gulp.watch([sources], ['webpack:build-web-dev']);
-    //gulp.watch(['./_build/assets/sass/**/*.scss'], ['css']);
-});
-
-// gulp.task('css', function() {
-//     var sassStream = sass('./_build/assets/sass/fred.scss', {
-//         style: 'compressed',
-//         loadPath: [
-//             './_build/assets/sass'
-//         ]
-//     });
-//    
-//     var cssStream = gulp.src([
-//     ]);
-//    
-//     return merge(sassStream,cssStream)
-//         .pipe(concat('fredfaeditor.css'))
-//         .pipe(gulp.dest('./assets/components/fredfaeditor/web'));
-// });
-
-// Run Babel only
-gulp.task('build-babel', ['clean'], () =>
-    gulp.src([sources])
-        .pipe($.babel())
-        // Output files
-        .pipe(gulp.dest(libFolder))
-);
-
-// Clean folder
-gulp.task('clean', () =>
-    del([`${libFolder}/**/*`])
-);
-
-// Webpack helper
-gulp.task('webpack:build-web', done => {
-    var env = {'BUILD_ENV': 'PROD', 'TARGET_ENV': 'WEB'};
-    var taskName = 'webpack:build-web';
-    // run webpack
-    webpack(webpackConfig(env), onBuild(done, taskName));
-});
-
-// Webpack watch helper
-// create a single instance of the compiler to allow caching
-var webDevCompiler = null;
-gulp.task('webpack:build-web-dev', done => {
-    var env = {'BUILD_ENV': 'DEV', 'TARGET_ENV': 'WEB'};
-    var taskName = 'webpack:build-web-dev';
-    // build dev compiler
-    if (!webDevCompiler) {
-        webDevCompiler = webpack(webpackConfig(env));
-    }
-    // run webpack
-    webDevCompiler.run(onBuild(done, taskName));
-});
 
 function onBuild(done, taskName) {
     return (err, stats) => {
@@ -99,3 +41,115 @@ function setEnv(buildEnv) {
         }
     });
 }
+
+// Create a new file
+function newFile(name, contents) {
+    //uses the node stream object
+    var readableStream = require('stream').Readable({ objectMode: true });
+    //reads in our contents string
+    readableStream._read = function () {
+      this.push(new util.File({ cwd: "", base: "", path: name, contents: new Buffer.from(contents) }));
+      this.push(null);
+    }
+    return readableStream;
+  };
+
+//Download Font Awesome Yaml
+gulp.task('fa:download', function () {
+    return request('https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.9.0/metadata/icons.yml')
+        .pipe(source(tmpIcons))
+        .pipe(gulp.dest(tmpFolder))
+    ;
+});
+
+//Convert Yaml to JSON
+gulp.task('fa:yaml', function() {
+    return gulp.src(tmpFolder+'*.yml')
+    .pipe(yaml({ space: 2, json: true }))
+    .pipe(gulp.dest(tmpFolder));
+});
+
+//Convert Yaml to JSON
+gulp.task('fa:format', function() {
+    let targetJSON = {
+        icons: []
+    };
+    var sourceJSON = require(tmpFolder+'icons.temp.json');
+    Object.keys(sourceJSON).forEach(function(key) {
+        let ele = sourceJSON[key];
+        let icon = 'fa-' + key;
+        ele.styles.forEach(function(style) {
+            style = style.toLowerCase();
+            if (style.startsWith('brand')) {
+                targetJSON.icons.push({
+                    title: 'fab ' + icon,
+                    searchTerms: ele.search.terms
+                });
+            } else if (style.startsWith('solid')) {
+                targetJSON.icons.push({
+                    title: 'fas ' + icon,
+                    searchTerms: ele.search.terms
+                });
+            } else if (style.startsWith('regular')) {
+                targetJSON.icons.push({
+                    title: 'far ' + icon,
+                    searchTerms: ele.search.terms
+                });
+            } else if (style.startsWith('light')) {
+                targetJSON.icons.push({
+                    title: 'fal ' + icon,
+                    searchTerms: ele.search.terms
+                });
+            }
+        });
+    });
+    return newFile('icons.temp.formatted.json', JSON.stringify(targetJSON.icons))
+    .pipe(gulp.dest(tmpFolder));
+});
+
+// Clean folder
+gulp.task('clean', () =>
+    del([`${libFolder}/**/*`])
+);
+
+// Run Babel only
+gulp.task('build-babel', gulp.series('clean'), () =>
+    gulp.src([sources])
+        .pipe($.babel())
+        // Output files
+        .pipe(gulp.dest(libFolder))
+);
+
+// Webpack helper
+gulp.task('webpack:build-web', done => {
+    var env = {'BUILD_ENV': 'PROD', 'TARGET_ENV': 'WEB'};
+    var taskName = 'webpack:build-web';
+    // run webpack
+    webpack(webpackConfig(env), onBuild(done, taskName));
+});
+
+// Build for web
+gulp.task('build-web', gulp.series('webpack:build-web'/*, 'css'*/));
+
+
+// Webpack watch helper
+// create a single instance of the compiler to allow caching
+var webDevCompiler = null;
+gulp.task('webpack:build-web-dev', done => {
+    var env = {'BUILD_ENV': 'DEV', 'TARGET_ENV': 'WEB'};
+    var taskName = 'webpack:build-web-dev';
+    // build dev compiler
+    if (!webDevCompiler) {
+        webDevCompiler = webpack(webpackConfig(env));
+    }
+    // run webpack
+    webDevCompiler.run(onBuild(done, taskName));
+});
+
+// Build for web + watch
+gulp.task('build-web-dev', () => {
+    gulp.watch([sources], gulp.series('webpack:build-web-dev'));
+    //gulp.watch(['./_build/assets/sass/**/*.scss'], ['css']);
+});
+
+gulp.task('default', gulp.series('build-web'));

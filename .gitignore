@@ -1,6 +1,7 @@
 # Config files #
 ################
 _build/build.config.php
+_build/assets/tmp
 config.core.php
 
 # Packages #
