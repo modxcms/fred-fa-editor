@@ -1,9 +1,5 @@
-Changelog for Fred FA Editor.
+Changelog for the Fred Font Awesome (FA) Icon Editor and Picker.
 
-Fred FA Editor 1.0.0-beta2
+1.0.0
 ==============
-- Add resolver to adjust IconEditor in system settings
-
-Fred FA Editor 1.0.0-beta
-==============
-- Initial release.
+- Initial release
