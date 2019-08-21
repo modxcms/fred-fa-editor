@@ -3,7 +3,7 @@
   "lowCaseName": "fredfaeditor",
   "description": "FontAwesome Editor for Fred",
   "author": "John Peca",
-  "version": "1.0.0-rc",
+  "version": "1.0.0-pl",
   "package": {
     "menus": [],
     "elements": {
@@ -21,7 +21,7 @@
   "dependencies": [
     {
       "name": "fred",
-      "version": ">=1.0.0"
+      "version": ">=1.1.0"
     }
   ],
   "build": {
