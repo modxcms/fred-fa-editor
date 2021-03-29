@@ -1,15 +1,9 @@
-var webpack = require('webpack');
-var path = require('path');
-var assign = require('object-assign');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
-var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-module.exports = function getConfig(options) {
-
+module.exports = (env, options) => {  
     var options = options || {};
-
-    var isProd = (options.BUILD_ENV || process.env.BUILD_ENV) === 'PROD';
-
+    const isProd = options.mode === 'production';
     // get library details from JSON config
     var libraryDesc = require('./package.json').library;
     var libraryName = libraryDesc.name;
@@ -17,64 +11,51 @@ module.exports = function getConfig(options) {
     // determine output file name
     var outputName = buildLibraryOutputName(libraryDesc, isProd);
 
-    // get base config
-    var config;
+    return {
+        mode: options.mode,
+        devtool: isProd ? false : 'source-map',
 
-    // for the web
-    config = assign(getBaseConfig(isProd), {
+        entry: [
+            '@babel/polyfill',
+            './_build/assets/js/index.js'
+        ],
+
         output: {
-            path: path.join(__dirname, './assets/components/fredfaeditor/web'),
-            filename: outputName,
+            path: path.resolve(__dirname, './assets/components/fredfaeditor/web'),
             library: libraryName,
             libraryTarget: 'umd',
-            umdNamedDefine: true
-        }
-    });
-
-    config.plugins.push(new CleanWebpackPlugin(['dist']));
-
-    return config;
-};
-
-/**
- * Build base config
- * @param  {Boolean} isProd [description]
- * @return {[type]}         [description]
- */
-function getBaseConfig(isProd) {
-
-    // get library details from JSON config
-    var libraryDesc = require('./package.json').library;
-    var libraryEntryPoint = path.join('./_build/assets/js', libraryDesc.entry);
-
-    // generate webpack base config
-    return {
-        entry: path.join(__dirname, libraryEntryPoint),
-        output: {
-            // ommitted - will be filled according to target env
+            libraryExport: 'default',
+            filename: outputName
         },
+
         module: {
-            loaders: [
-                {test: /\.js$/, exclude: /(node_modules|bower_components)/, loader: "babel-loader"},
+            rules: [
+                {
+                    test: /\.ts$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.js$/,
+                    exclude: /(node_modules)/,
+                    use: {
+                        loader: 'babel-loader'
+                    }
+                }
             ]
         },
+
         resolve: {
-            root: path.resolve('./src'),
-            extensions: ['', '.js']
+            extensions: [ '.ts', '.js' ],
         },
-        devtool: isProd ? null : '#eval-source-map',
-        debug: !isProd,
-        plugins: isProd ? [
-            new webpack.DefinePlugin({'process.env': {'NODE_ENV': '"production"'}}),
-            new UglifyJsPlugin({minimize: true})
-            // Prod plugins here
-        ] : [
-            new webpack.DefinePlugin({'process.env': {'NODE_ENV': '"development"'}})
-            // Dev plugins here
+
+        plugins: [
+            isProd ? new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: ['fredfaeditor.*']
+            }) : () => {}
         ]
     };
-}
-
+};
 function buildLibraryOutputName(libraryDesc, isProd) {
     return libraryDesc["dist-web"] || [libraryDesc.name, 'web', (isProd ? 'min.js' : 'js')].join('.');
 }

@@ -1,4 +1,6 @@
 {
-    "plugins": ["babel-plugin-add-module-exports", "inline-json-import"],
-    "presets": ["es2015", "stage-0"]
+    "plugins": ["@babel/plugin-proposal-class-properties","add-module-exports", "inline-json-import"],
+    "presets": [
+        ["@babel/preset-env", { "targets": "> 0.25%, not dead" }]
+      ]
 }

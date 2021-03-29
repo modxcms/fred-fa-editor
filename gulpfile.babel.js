@@ -57,7 +57,7 @@ function newFile(name, contents) {
 
 //Download Font Awesome Yaml
 gulp.task('fa:download', function () {
-    return request('https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.9.0/metadata/icons.yml')
+    return request('https://raw.githubusercontent.com/FortAwesome/Font-Awesome/5.15.3/metadata/icons.yml')
         .pipe(source(tmpIcons))
         .pipe(gulp.dest(tmpFolder))
     ;
@@ -129,7 +129,7 @@ gulp.task('webpack:build-web', done => {
     var env = {'BUILD_ENV': 'PROD', 'TARGET_ENV': 'WEB'};
     var taskName = 'webpack:build-web';
     // run webpack
-    webpack(webpackConfig(env), onBuild(done, taskName));
+    webpack(webpackConfig(env, {mode: 'production'}), onBuild(done, taskName));
 });
 
 // Build for web
@@ -144,7 +144,7 @@ gulp.task('webpack:build-web-dev', done => {
     var taskName = 'webpack:build-web-dev';
     // build dev compiler
     if (!webDevCompiler) {
-        webDevCompiler = webpack(webpackConfig(env));
+        webDevCompiler = webpack(webpackConfig(env, {mode: 'development'}));
     }
     // run webpack
     webDevCompiler.run(onBuild(done, taskName));

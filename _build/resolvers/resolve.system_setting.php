@@ -14,6 +14,20 @@ if ($object->xpdo) {
             }
 
             break;
+            
+        case xPDOTransport::ACTION_UPGRADE:
+
+            /** @var modX $modx */
+            $modx =& $object->xpdo;
+
+            /** @var modSystemSetting $setting */
+            $setting = $modx->getObject('modSystemSetting', ['key' => 'fredfaeditor.link']);
+            if ($setting) {
+                $setting->set('value', 'https://use.fontawesome.com/releases/v5.15.3/css/all.css');
+                $setting->save();
+            }
+
+            break;
     }
 }
 return true;
