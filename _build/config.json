@@ -16,14 +16,14 @@
           ]
         }
       ]
-    }
+    },
+    "systemSettings": [
+      {
+        "key": "link",
+        "value": "https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+      }
+    ]
   },
-  "systemSettings": [
-    {
-      "key": "link",
-      "value": "https://use.fontawesome.com/releases/v5.15.3/css/all.css"
-    }
-  ],
   "dependencies": [
     {
       "name": "fred",
