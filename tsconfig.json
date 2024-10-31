@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./_build/assets/js",
+    "paths": {
+    },
+    "outDir": "./assets/components/fredfaeditor/web",
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "target": "es6",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+  },
+  "include": [
+    "_build/assets/js/**/*"
+  ],
+}

@@ -1,18 +1,75 @@
-import faIcons from './icons.json';
+import * as iconFile from '@fortawesome/fontawesome-free/metadata/icon-families.json';
 export default (fred, Editor, pluginTools) => {
     const { fredConfig } = pluginTools;
     const { div, label, i } = pluginTools.ui.els;
     const { select, toggle } = pluginTools.ui.ins;
 
     return class FAIconEditor extends Editor {
-        static icons = faIcons;
+        static icons = [];
 
         init() {
-            this.animation = {'': fredConfig.lng('fredfaeditor.none'), 'fa-spin': fredConfig.lng('fredfaeditor.spin'), 'fa-pulse': fredConfig.lng('fredfaeditor.pulse')};
-            this.sizes = {'': fredConfig.lng('fredfaeditor.default'), 'fa-xs': 'XS', 'fa-sm': 'SM', 'fa-lg': 'LG', 'fa-2x': '2x', 'fa-3x': '3x', 'fa-4x': '4x', 'fa-5x': '5x', 'fa-6x': '6x', 'fa-7x': '7x', 'fa-8x': '8x', 'fa-9x': '9x', 'fa-10x': '10x'};
-            this.pull = {'': fredConfig.lng('fredfaeditor.none'), 'fa-pull-left': fredConfig.lng('fredfaeditor.left'), 'fa-pull-right': fredConfig.lng('fredfaeditor.right')};
-
+            this.animation = {
+                '': fredConfig.lng('fredfaeditor.none'),
+                'fa-spin': fredConfig.lng('fredfaeditor.spin'),
+                'fa-pulse': fredConfig.lng('fredfaeditor.pulse')
+            };
+            this.sizes = {
+                '': fredConfig.lng('fredfaeditor.default'),
+                'fa-xs': 'XS',
+                'fa-sm': 'SM',
+                'fa-lg': 'LG',
+                'fa-2x': '2x',
+                'fa-3x': '3x',
+                'fa-4x': '4x',
+                'fa-5x': '5x',
+                'fa-6x': '6x',
+                'fa-7x': '7x',
+                'fa-8x': '8x',
+                'fa-9x': '9x',
+                'fa-10x': '10x'
+            };
+            this.pull = {
+                '': fredConfig.lng('fredfaeditor.none'),
+                'fa-pull-left': fredConfig.lng('fredfaeditor.left'),
+                'fa-pull-right': fredConfig.lng('fredfaeditor.right')
+            };
             this.state = this.parseClass((this.el.fredEl.constructor.getElValue(this.el) || ''));
+            this.buildIcons();
+        }
+
+        buildIcons() {
+            if (FAIconEditor.icons.length > 0) {
+                return;
+            }
+            this.parseIcons(iconFile);
+        }
+
+        parseIcons(jsonFile) {
+            const json = (typeof jsonFile === 'string') ? JSON.parse(jsonFile) : jsonFile;
+            Object.keys(json).forEach(icon => {
+                const iconData = json[icon];
+                const iconTitle = icon;
+                const iconSearchTerms = iconData['search']['terms'];
+                let style = 'fa';
+                if (typeof iconData['familyStylesByLicense'] !== "undefined" && iconData['familyStylesByLicense']['free'].length > 0) {
+                    switch (iconData['familyStylesByLicense']['free'][0]['style']) {
+                        case 'brands':
+                            style = 'fab';
+                            break;
+                        case 'regular':
+                            style = 'far';
+                            break;
+                        case 'solid':
+                            style = 'fas';
+                            break;
+                    }
+                }
+                FAIconEditor.icons.push({
+                    title: `${style} fa-${iconTitle}`,
+                    searchTerms: iconSearchTerms
+                });
+            });
+
         }
 
         render() {

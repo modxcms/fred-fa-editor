@@ -4,8 +4,8 @@
   "description": "ES6 Universal Library Starter",
   "main": "./_build/assets/index.js",
   "scripts": {
-    "build": "gulp build-web",
-    "build-dev": "gulp build-web-dev"
+    "build": "webpack --progress --mode production",
+    "dev": "webpack --watch --progress --mode development"
   },
   "license": "MIT",
   "files": [
@@ -16,42 +16,26 @@
     "dist"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.13.14",
-    "@babel/core": "^7.13.14",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
-    "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.13.12",
-    "@babel/register": "^7.13.14",
-    "babel-loader": "^8.2.2",
-    "babel-plugin-add-module-exports": "^1.0.4",
-    "babel-plugin-inline-json-import": "^0.3.2",
-    "braces": "^3.0.2",
-    "clean-webpack-plugin": "^3.0.0",
-    "concat-with-sourcemaps": "^1.1.0",
-    "del": "^6.0.0",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-env": "^0.4.0",
-    "gulp-load-plugins": "^2.0.6",
-    "gulp-util": "^3.0.8",
-    "gulp-yaml": "^2.0.4",
-    "lodash": "^4.17.21",
-    "lodash.template": "^4.5.0",
-    "merge-stream": "^2.0.0",
-    "object-assign": "^4.1.1",
-    "randomatic": "^3.1.1",
-    "request": "^2.88.2",
-    "vinyl-source-stream": "^2.0.0",
-    "webpack": "^5.28.0",
-    "webpack-cli": "^4.6.0",
-    "webpack-node-externals": "^2.5.2"
+    "@babel/core": "^7.24.9",
+    "@babel/plugin-transform-class-properties": "^7.24.7",
+    "@babel/preset-env": "^7.24.8",
+    "babel-loader": "^9.1.3",
+    "json-loader": "^0.5.7",
+    "path-browserify": "^1.0.1",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.4",
+    "url": "^0.11.3",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4",
+    "yaml": "^2.6.0"
   },
   "library": {
     "name": "FredFAEditor",
     "entry": "index.js",
-    "dist-web": "fredfaeditor.min.js"
+    "dist-web": "fred-fa-editor.min.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.6.0"
+  }
 }

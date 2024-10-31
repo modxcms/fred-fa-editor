@@ -1,31 +1,22 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-module.exports = (env, options) => {  
-    var options = options || {};
+module.exports = (env, options) => {
     const isProd = options.mode === 'production';
-    // get library details from JSON config
-    var libraryDesc = require('./package.json').library;
-    var libraryName = libraryDesc.name;
-
-    // determine output file name
-    var outputName = buildLibraryOutputName(libraryDesc, isProd);
 
     return {
         mode: options.mode,
         devtool: isProd ? false : 'source-map',
 
         entry: [
-            '@babel/polyfill',
-            './_build/assets/js/index.js'
+            './_build/assets/js/index.ts'
         ],
 
         output: {
             path: path.resolve(__dirname, './assets/components/fredfaeditor/web'),
-            library: libraryName,
+            library: 'FredFAEditor',
             libraryTarget: 'umd',
             libraryExport: 'default',
-            filename: outputName
+            filename: 'fredfaeditor.min.js'
         },
 
         module: {
@@ -41,21 +32,21 @@ module.exports = (env, options) => {
                     use: {
                         loader: 'babel-loader'
                     }
-                }
+                },
             ]
         },
 
         resolve: {
+            alias: {
+            },
             extensions: [ '.ts', '.js' ],
+            fallback: {
+                "path": require.resolve("path-browserify"),
+                "url":  require.resolve("url/"),
+                fs: false
+            }
         },
 
-        plugins: [
-            isProd ? new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: ['fredfaeditor.*']
-            }) : () => {}
-        ]
+        plugins: []
     };
 };
-function buildLibraryOutputName(libraryDesc, isProd) {
-    return libraryDesc["dist-web"] || [libraryDesc.name, 'web', (isProd ? 'min.js' : 'js')].join('.');
-}
