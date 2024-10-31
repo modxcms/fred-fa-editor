@@ -1,4 +1,9 @@
 Changelog for the Fred Font Awesome (FA) Icon Editor and Picker.
+1.2.0
+==============
+- Update to latest FA library to 6.6.0
+- Rebuild to work with latest Fred
+
 
 1.1.0 
 ==============
