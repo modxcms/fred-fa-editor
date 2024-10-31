@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
   },
   "include": [
+    ".d.ts",
     "_build/assets/js/**/*"
   ],
 }

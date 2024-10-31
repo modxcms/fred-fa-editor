@@ -33,6 +33,10 @@ module.exports = (env, options) => {
                         loader: 'babel-loader'
                     }
                 },
+                {
+                    test: /\.ya?ml$/,
+                    use: 'yaml-loader'
+                }
             ]
         },
 

@@ -23,7 +23,7 @@ if ($object->xpdo) {
             /** @var modSystemSetting $setting */
             $setting = $modx->getObject('modSystemSetting', ['key' => 'fredfaeditor.link']);
             if ($setting) {
-                $setting->set('value', 'https://use.fontawesome.com/releases/v5.15.3/css/all.css');
+                $setting->set('value', 'https://use.fontawesome.com/releases/v6.6.0/css/all.css');
                 $setting->save();
             }
 

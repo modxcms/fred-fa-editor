@@ -1,4 +1,4 @@
-import * as iconFile from '@fortawesome/fontawesome-free/metadata/icon-families.json';
+import iconFile from '@fortawesome/fontawesome-free/metadata/icons.yml';
 export default (fred, Editor, pluginTools) => {
     const { fredConfig } = pluginTools;
     const { div, label, i } = pluginTools.ui.els;
@@ -41,18 +41,18 @@ export default (fred, Editor, pluginTools) => {
             if (FAIconEditor.icons.length > 0) {
                 return;
             }
+            console.log(iconFile);
             this.parseIcons(iconFile);
         }
 
-        parseIcons(jsonFile) {
-            const json = (typeof jsonFile === 'string') ? JSON.parse(jsonFile) : jsonFile;
-            Object.keys(json).forEach(icon => {
-                const iconData = json[icon];
+        parseIcons(yaml) {
+            Object.keys(yaml).forEach(icon => {
+                const iconData = yaml[icon];
                 const iconTitle = icon;
                 const iconSearchTerms = iconData['search']['terms'];
                 let style = 'fa';
-                if (typeof iconData['familyStylesByLicense'] !== "undefined" && iconData['familyStylesByLicense']['free'].length > 0) {
-                    switch (iconData['familyStylesByLicense']['free'][0]['style']) {
+                if (typeof iconData['styles'] !== "undefined" && iconData['styles'].length > 0) {
+                    switch (iconData['styles'][0]) {
                         case 'brands':
                             style = 'fab';
                             break;
